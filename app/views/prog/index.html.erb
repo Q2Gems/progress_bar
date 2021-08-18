@@ -1,0 +1,176 @@
+<h1> Welcome index </h1>
+<%= form_with model: @prog do |f|%>
+      <div>
+        <%= f.label :staff_id%><br>
+        <%= f.text_field :staff_id%>
+      </div>
+      <div>
+        <%= f.label :staff_name%><br>
+        <%= f.text_field :staff_name%>
+      </div>
+      <div>
+        <%= f.label :company_name%><br>
+        <%= f.text_field :company_name%>
+      </div>
+      <div class="action">
+        <%= f.submit %>
+      </div>
+<%end%>
+
+
+
+<div class="row progress_bar">
+  <div class= "col-6 col-md-4">
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="row tasks">
+        <div class="col-md-6">
+          <p><span>Identify your campaign audience.</span>Who are we talking to here? Understand your buyer persona before launching into a campaign, so you can target them correctly.</p>
+        </div>
+        <div class="col-md-2">
+          <label>2014-01-29</label>
+        </div>
+        <div class="col-md-2">
+          <input name="progress" class="progress" type="checkbox" value="10">
+        </div>
+        <div class="col-md-2">
+          <input name="done" class="done" type="checkbox" value="20">
+        </div>
+</div><!-- tasks -->
+
+<div class="row tasks">
+        <div class="col-md-6">
+          <p><span>Set your goals + benchmarks</span>Having SMART goals can help you be
+            sure that you’ll have tangible results to share with the world (or your
+            boss) at the end of your campaign.</p>
+        </div>
+        <div class="col-md-2">
+          <label>2014-01-25</label>
+        </div>
+        <div class="col-md-2">
+          <input name="progress" class="progress" type="checkbox" value="30">
+        </div>
+        <div class="col-md-2">
+          <input name="done" class="done" type="checkbox" value="40">
+        </div>
+</div><!-- tasks -->
+
+<div class = "row tasks">
+  <div class = "panel panel-primary">
+    <div class = "panel-heading"> Panel heading without title </div>
+    <div class="panel-body"> Panel Content </div>
+    <div class="panel-footer">
+      <div class="progress transfer">
+        <div class= "progress-bar-panel bg-success" role="progressbar"  aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class = "row tasks">
+  <div class = "demo-button">
+    <button id="button-update" class="btn btn-primary" type="button"> update staff data </button>
+  </div>
+</div>
+
+<div class = "row tasks">
+  <table class = "table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col"> STAFF ID</th>
+        <th scope="col"> STAFF NAME</th>
+        <th scope="col"> STAFF COMPANY NAME</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+</div>
+
+<div class = "row tasks">
+  <ul id="list">
+
+  </ul>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDi96Kp4rTltPol50hmoVuGjcvYqYPwS8s",
+    authDomain: "tk-angular-dev.firebaseapp.com",
+    databaseURL: "https://tk-angular-dev.firebaseio.com",
+    projectId: "tk-angular-dev",
+    storageBucket: "tk-angular-dev.appspot.com",
+    messagingSenderId: "802748250939",
+    appId: "1:802748250939:web:a7fe1d22d14bd121"
+};
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}else {
+  firebase.app();
+}
+var stNo=0;
+function addItemToList(staffId, staffName, companyName){
+  var ul = document.getElementById('list');
+  var header = document.createElement('h2');
+
+  header.innerHTML = 'Staff-' + (++stNo);
+
+  var _staffId = document.createElement('li');
+  var _staffName = document.createElement('li');
+  var _companyName = document.createElement('li');
+
+
+  _staffId.innerHTML = 'Staff ID: ' + staffId;
+  _staffName.innerHTML = 'Staff Name: ' + staffName;
+  _companyName.innerHTML = 'Company Name: ' + companyName;
+
+
+  ul.appendChild(header);
+  ul.appendChild(_staffId);
+  ul.appendChild(_staffName);
+  ul.appendChild(_companyName);
+
+}
+
+function FetchAllData(){
+  firebase.database().ref('todos').once('value',function(snapshot){
+      snapshot.forEach(
+        function(ChildSnapshot) {
+            let staffId = ChildSnapshot.val().staff_id;
+            let staffName = ChildSnapshot.val().staff_name;
+            let companyName = ChildSnapshot.val().company_name;
+
+            addItemToList(staffId, staffName, companyName);
+
+        }
+      );
+  });
+}
+
+
+
+var timeout = 3000;
+$('#button-update').on('click', () => {
+  console.log("Hello")
+    $('#button-update').attr("disabled", "disabled");
+    setTimeout(() => {
+      $('#button-update').removeAttr("disabled");
+    }, timeout);
+    //window.onload = function() {
+      FetchAllData();
+    //}
+});
+
+
+</script>
