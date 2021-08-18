@@ -4,4 +4,3 @@ Rails.application.routes.draw do
   post "/prog", to: "prog#create"
   get "/prog", to: "prog#create"
 end
-
